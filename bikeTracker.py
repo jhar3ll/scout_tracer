@@ -9,20 +9,17 @@ from tweetLogic import sendDM
 
 def initiate():
     global driver
-    global soup
     service = Service('C:\\Users\\kapti\\.vscode\Workspace\\building\\FE_Tracker\\chromedriver.exe')
     options = Options()
     option_args = ['--no-sandbox','--disable-dev-shm-usage','--disable-gpu',"--start-maximized","--user-data-dir=C:\\Users\\kapti\\PycharmProjects\\lbt\\pd3070"]
     for arg in option_args:
         options.add_argument(arg)
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    url = "https://www.polaris.com/en-us/account/orders/details/?orderId=375036"
     driver = webdriver.Chrome(service=service, options=options)
-    driver.get(url)
+    driver.get("https://www.polaris.com/en-us/account/orders/details/?orderId=375036")
     
 def getStatus():
-    html = driver.page_source
-    soup = bs4.BeautifulSoup(html, "html.parser")
+    soup = bs4.BeautifulSoup(driver.page_source, "html.parser")
     bikeStatuses = soup.find_all("li", {"class": "progress-bar-status__list-item"})
     
     for i in bikeStatuses:
