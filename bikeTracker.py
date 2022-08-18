@@ -1,3 +1,4 @@
+from turtle import goto
 import bs4
 import time
 from datetime import datetime
@@ -9,6 +10,7 @@ from tweetLogic import sendDM
 
 def initiate():
     global driver
+    global soup
     service = Service('C:\\Users\\kapti\\.vscode\Workspace\\building\\FE_Tracker\\chromedriver.exe')
     options = Options()
     option_args = ['--no-sandbox','--disable-dev-shm-usage','--disable-gpu',"--start-maximized","--user-data-dir=C:\\Users\\kapti\\PycharmProjects\\lbt\\pd3070"]
@@ -17,15 +19,20 @@ def initiate():
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     driver = webdriver.Chrome(service=service, options=options)
     driver.get("https://www.polaris.com/en-us/account/orders/details/?orderId=375036")
+    soup = bs4.BeautifulSoup(driver.page_source, "html.parser")
     
 def getStatus():
-    soup = bs4.BeautifulSoup(driver.page_source, "html.parser")
     bikeStatuses = soup.find_all("li", {"class": "progress-bar-status__list-item"})
-    
+   
     for i in bikeStatuses:
         if i.get("data-status-active") == 'True':
             currentBikeStatus = i.find("div").getText()
     return currentBikeStatus
+
+def getShipDate():
+    bikeDetails = soup.find("div", {"class": "wholegoods-orders-details__app-order-status-progress"}).find_all("div")
+    shipDate = bikeDetails[1].getText()
+    return shipDate
 
 def getTime():
     date = datetime.now(timezone('US/Central'))
@@ -43,12 +50,16 @@ def runTracker():
     initiate()
     status = True
     lastPhase = "Scheduled"
+    lastDate = "Ship Date: 08/16/2022 - 08/31/2022"
     while status:
         currentStatus = getStatus()
-        print(f'{currentStatus} at {getTime()}')
+        currentDate = getShipDate()
+        print(f'{currentStatus} at {getTime()}. {currentDate}')
 
         if currentStatus != lastPhase:
             sendDM(f'Your Scout Rogue build status has changed to {currentStatus}!', 135039188)
+        elif currentDate != lastDate:
+            sendDM(f'Your Scout Rogue ship date has changed to {currentDate}!', 135039188)
         time.sleep(3600)
         driver.refresh()
 
