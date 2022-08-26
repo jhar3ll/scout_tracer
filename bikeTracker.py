@@ -1,4 +1,3 @@
-from turtle import goto
 import bs4
 import time
 from datetime import datetime
@@ -60,7 +59,7 @@ def runTracker():
             sendDM(f'Your Scout Rogue build status has changed to {currentStatus}!', 135039188)
         elif currentDate != lastDate:
             sendDM(f'Your Scout Rogue ship date has changed to {currentDate}!', 135039188)
-        time.sleep(3600)
+        time.sleep(1800)
         driver.refresh()
 
 runTracker()
