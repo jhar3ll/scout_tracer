@@ -55,10 +55,8 @@ def runTracker():
         currentDate = getShipDate()
         print(f'{currentStatus} at {getTime()}. {currentDate}')
 
-        if currentStatus != lastPhase:
-            sendDM(f'Your Scout Rogue build status has changed to {currentStatus}!', 135039188)
-        elif currentDate != lastDate:
-            sendDM(f'Your Scout Rogue ship date has changed to {currentDate}!', 135039188)
+        if currentStatus != lastPhase or currentDate != lastDate:
+            sendDM(f'Your Scout Rogue build status has changed to {currentStatus}, {currentDate}!', 135039188)
         time.sleep(1800)
         driver.refresh()
 
