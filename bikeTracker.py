@@ -9,7 +9,7 @@ from tweetLogic import sendDM
 
 def init():
     global driver
-    service = Service('C:\\Users\\kapti\\.vscode\Workspace\\building\\FE_Tracker\\chromedriver.exe')
+    service = Service('C:\\Users\\kapti\\.vscode\Chromedriver\\chromedriver.exe')
     options = Options()
     option_args = ['--no-sandbox','--disable-dev-shm-usage','--disable-gpu',"--start-maximized","--user-data-dir=C:\\Users\\kapti\\PycharmProjects\\lbt\\pd3070"]
     for arg in option_args:
@@ -19,6 +19,7 @@ def init():
     driver.get("https://www.polaris.com/en-us/account/orders/details/?orderId=375036")
       
 def getStatus():
+    global soup
     soup = bs4.BeautifulSoup(driver.page_source, "html.parser")
     bikeStatuses = soup.find_all("li", {"class": "progress-bar-status__list-item"})
     for i in bikeStatuses:
@@ -27,7 +28,6 @@ def getStatus():
     return currentBikeStatus
 
 def getShipDate():
-    soup = bs4.BeautifulSoup(driver.page_source, "html.parser")
     bikeDetails = soup.find("div", {"class": "wholegoods-orders-details__app-order-status-progress"}).find_all("div")
     shipDate = bikeDetails[1].getText()
     return shipDate
