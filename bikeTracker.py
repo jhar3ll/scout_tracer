@@ -1,3 +1,4 @@
+from lib2to3.pgen2 import driver
 import bs4
 import time
 from datetime import datetime
@@ -8,18 +9,20 @@ from selenium.webdriver.chrome.options import Options
 from tweetLogic import sendDM
 
 def init(url):
-    global driver
     service = Service('C:\\Users\\kapti\\.vscode\Chromedriver\\chromedriver.exe')
     options = Options()
-    option_args = ['--no-sandbox','--disable-dev-shm-usage','--disable-gpu',"--start-maximized","--user-data-dir=C:\\Users\\kapti\\PycharmProjects\\lbt\\pd3070"]
+    option_args = ['--no-sandbox','--disable-dev-shm-usage','--disable-gpu',"--start-maximized","--user-data-dir=C:\\Users\\kapti\\PycharmProjects\\lbt\\valtracker"]
     for arg in option_args:
         options.add_argument(arg)
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    driver = webdriver.Chrome(service=service, options=options)
-    driver.get(url)
-      
+    webDriver = webdriver.Chrome(service=service, options=options)
+    webDriver.get(url)
+    return webDriver
+
 def getStatus():
     global soup
+    global driver
+    driver = init("https://www.polaris.com/en-us/account/orders/details/?orderId=375036")
     soup = bs4.BeautifulSoup(driver.page_source, "html.parser")
     bikeStatuses = soup.find_all("li", {"class": "progress-bar-status__list-item"})
     for i in bikeStatuses:
@@ -45,7 +48,6 @@ def getTime():
     return timestamp
 
 def runTracker():
-    init("https://www.polaris.com/en-us/account/orders/details/?orderId=375036")
     status = True
     lastPhase = "Built"
     lastDate = "Ship Date: 09/16/2022"
