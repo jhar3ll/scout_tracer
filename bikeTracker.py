@@ -29,7 +29,7 @@ def getStatus():
 
 def getShipDate():
     bikeDetails = soup.find("div", {"class": "wholegoods-orders-details__app-order-status-progress"}).find_all("div")
-    shipDate = bikeDetails[1].getText()
+    shipDate = bikeDetails[1].getText() if bikeDetails[1] else None
     return shipDate
 
 def getTime():
@@ -57,6 +57,7 @@ def runTracker():
         if currentStatus != lastPhase or currentDate != lastDate:
             print(f'Your Scout Rogue build status has changed to {currentStatus}, {currentDate}!')
             sendDM(f'Your Scout Rogue build status has changed to {currentStatus}, {currentDate}!', 135039188)
+            status = False
         time.sleep(1800)
         driver.refresh()
 
