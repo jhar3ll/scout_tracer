@@ -7,7 +7,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from tweetLogic import sendDM
 
-def init():
+def init(url):
     global driver
     service = Service('C:\\Users\\kapti\\.vscode\Chromedriver\\chromedriver.exe')
     options = Options()
@@ -16,7 +16,7 @@ def init():
         options.add_argument(arg)
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     driver = webdriver.Chrome(service=service, options=options)
-    driver.get("https://www.polaris.com/en-us/account/orders/details/?orderId=375036")
+    driver.get(url)
       
 def getStatus():
     global soup
@@ -45,7 +45,7 @@ def getTime():
     return timestamp
 
 def runTracker():
-    init()
+    init("https://www.polaris.com/en-us/account/orders/details/?orderId=375036")
     status = True
     lastPhase = "Built"
     lastDate = "Ship Date: 09/16/2022"
