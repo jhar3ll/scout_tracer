@@ -48,7 +48,7 @@ def getTime():
 def runTracker():
     init()
     status = True
-    lastPhase = "Built"
+    lastPhase = "Scheduled"
     lastDate = "Ship Date: 09/16/2022"
     while status:
         currentStatus = getStatus()
