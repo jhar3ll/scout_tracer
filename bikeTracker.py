@@ -20,18 +20,14 @@ def init():
     driver.get("https://www.polaris.com/en-us/account/orders/details/?orderId=375036")
 
 def getStatus():
-    global soup
     soup = bs4.BeautifulSoup(driver.page_source, "html.parser")
     bikeStatuses = soup.find_all("li", {"class": "progress-bar-status__list-item"})
+    bikeDetails = soup.find("div", {"class": "wholegoods-orders-details__app-order-status-progress"}).find_all("div")
+    shipDate = bikeDetails[1].getText() if bikeDetails[1] else None
     for i in bikeStatuses:
         if i.get("data-status-active") == 'True':
             currentBikeStatus = i.find("div").getText()
-    return currentBikeStatus
-
-def getShipDate():
-    bikeDetails = soup.find("div", {"class": "wholegoods-orders-details__app-order-status-progress"}).find_all("div")
-    shipDate = bikeDetails[1].getText() if bikeDetails[1] else None
-    return shipDate
+    return currentBikeStatus, shipDate
 
 def getTime():
     date = datetime.now(timezone('US/Central'))
@@ -48,11 +44,11 @@ def getTime():
 def runTracker():
     init()
     status = True
-    lastPhase = "Scheduled"
+    lastPhase = "Built"
     lastDate = "Ship Date: 09/16/2022"
     while status:
-        currentStatus = getStatus()
-        currentDate = getShipDate()
+        currentStatus = getStatus()[0]
+        currentDate = getStatus()[1]
         print(f'{currentStatus} at {getTime()}. {currentDate}')
 
         if currentStatus != lastPhase or currentDate != lastDate:
